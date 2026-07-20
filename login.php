@@ -97,6 +97,12 @@
     </div>
 
     <form action="proses_login.php" method="POST">
+        <?php if (isset($_GET['error']) && $_GET['error'] == 'invalid'): ?>
+            <div style="background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger); padding: 10px 14px; border-radius: var(--radius-md); font-size: 13px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Email atau kata sandi tidak cocok. Silakan coba lagi!</span>
+            </div>
+        <?php endif; ?>
         <div class="input-group">
             <input type="email" name="email" class="form-control" placeholder="Alamat Email" required>
             <i class="fa-regular fa-envelope"></i>
