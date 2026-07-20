@@ -23,13 +23,13 @@ if ($data && (password_verify($password, $data['password']) || $password === $da
     $_SESSION['id'] = $data['id'];
 
     if ($data['role'] == 'admin') {
-        header("Location: ../admin.php");
+        header("Location: admin.php");
     } else {
-        header("Location: ../dashboard_user.php");
+        header("Location: dashboard_user.php");
     }
     exit;
 } else {
-    header("Location: ../login.php?error=invalid");
+    header("Location: login.php?error=invalid");
     exit;
 }
 ?>
