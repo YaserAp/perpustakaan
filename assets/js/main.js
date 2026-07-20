@@ -34,14 +34,67 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Mobile Sidebar Toggle (Off-canvas drawer)
+    // 3. Mobile Sidebar Toggle (Off-canvas drawer & Backdrop)
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
     const sidebar = document.querySelector('.sidebar');
-    if (mobileMenuBtn && sidebar) {
-        mobileMenuBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('mobile-open');
+    
+    // Create backdrop overlay for mobile
+    let mobileOverlay = document.getElementById('mobileOverlay');
+    if (!mobileOverlay) {
+        mobileOverlay = document.createElement('div');
+        mobileOverlay.id = 'mobileOverlay';
+        mobileOverlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.6); backdrop-filter: blur(2px); z-index: 1040; display: none; opacity: 0; transition: opacity 0.3s ease;';
+        document.body.appendChild(mobileOverlay);
+    }
+
+    function toggleMobileSidebar() {
+        if (!sidebar) return;
+        const isOpen = sidebar.classList.contains('mobile-open');
+        if (isOpen) {
+            sidebar.classList.remove('mobile-open');
+            mobileOverlay.style.opacity = '0';
+            setTimeout(() => { mobileOverlay.style.display = 'none'; }, 300);
+        } else {
+            sidebar.classList.add('mobile-open');
+            mobileOverlay.style.display = 'block';
+            setTimeout(() => { mobileOverlay.style.opacity = '1'; }, 10);
+        }
+    }
+
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMobileSidebar();
         });
     }
+
+    if (sidebarToggleBtn) {
+        sidebarToggleBtn.addEventListener('click', (e) => {
+            if (window.innerWidth <= 992) {
+                e.stopPropagation();
+                toggleMobileSidebar();
+            }
+        });
+    }
+
+    if (mobileOverlay) {
+        mobileOverlay.addEventListener('click', () => {
+            if (sidebar && sidebar.classList.contains('mobile-open')) {
+                toggleMobileSidebar();
+            }
+        });
+    }
+
+    // Auto-close mobile sidebar when clicking any nav item
+    const navLinks = document.querySelectorAll('.sidebar .nav-item');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 992 && sidebar && sidebar.classList.contains('mobile-open')) {
+                toggleMobileSidebar();
+            }
+        });
+    });
 
     // 4. Client-side Live Filter for Tables & Cards
     const filterInput = document.getElementById('tableFilterInput');
