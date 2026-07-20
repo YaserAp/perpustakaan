@@ -39,7 +39,7 @@ $dikembali_count = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM peminjaman
             <div class="brand-icon">
                 <i class="fa-solid fa-book"></i>
             </div>
-            <div class="brand-title">LibrarySmart</div>
+            <div class="brand-title">Perpustakaan</div>
         </div>
 
         <nav class="nav-menu">
@@ -120,7 +120,7 @@ $dikembali_count = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM peminjaman
                 <div class="stat-val"><?= $jumlah_user ?></div>
                 <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
             </div>
-            <div class="stat-label">Total Anggota Active</div>
+            <div class="stat-label">Total Anggota Aktif</div>
         </div>
 
         <div class="stat-card success">
