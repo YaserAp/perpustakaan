@@ -224,7 +224,7 @@ if ($page == 'koleksi') include __DIR__ . '/views/user/koleksi_buku_user.php';
             <button class="modal-close" onclick="closeModal('modalPinjam')">&times;</button>
         </div>
 
-        <form method="POST" action="buku.php">
+        <form method="POST" action="pinjam.php">
             <input type="hidden" name="buku_id" id="modal_buku_id">
             <input type="hidden" name="redirect_page" value="<?= htmlspecialchars($page) ?>">
 
