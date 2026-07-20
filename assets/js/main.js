@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. Mobile Sidebar Toggle (Off-canvas drawer & Backdrop)
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
     const sidebar = document.querySelector('.sidebar');
     
     // Create backdrop overlay for mobile
