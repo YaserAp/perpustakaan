@@ -33,14 +33,20 @@ if (!$data) {
     }
 }
 
-if ($data && (password_verify($password, $data['password']) || $password === $data['password'])) {
-    // Auto re-hash if matched plain text
-    if ($password === $data['password']) {
+$is_valid_password = false;
+if ($data) {
+    if (password_verify($password, $data['password'])) {
+        $is_valid_password = true;
+    } elseif ($password === $data['password'] || md5($password) === $data['password']) {
+        $is_valid_password = true;
+        // Auto re-hash plain text / legacy MD5 to Bcrypt
         $new_hash = password_hash($password, PASSWORD_DEFAULT);
         $user_id  = $data['id'];
         mysqli_query($conn, "UPDATE users SET password='$new_hash' WHERE id='$user_id'");
     }
+}
 
+if ($is_valid_password) {
     $_SESSION['email'] = $data['email'];
     $_SESSION['nama']  = $data['nama'];
     $_SESSION['role']  = $data['role'];
