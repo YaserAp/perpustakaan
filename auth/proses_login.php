@@ -2,7 +2,7 @@
 session_start();
 require_once __DIR__ . '/../config/koneksi.php';
 
-$email    = trim(mysqli_real_escape_string($conn, $_POST['email'] ?? ''));
+$email    = trim($_POST['email'] ?? '');
 $password = trim($_POST['password'] ?? '');
 
 if (empty($email) || empty($password)) {
@@ -10,12 +10,31 @@ if (empty($email) || empty($password)) {
     exit;
 }
 
-$query  = "SELECT * FROM users WHERE LOWER(email)='" . strtolower($email) . "'";
+$clean_email = mysqli_real_escape_string($conn, strtolower($email));
+$query  = "SELECT * FROM users WHERE LOWER(email)='$clean_email'";
 $result = mysqli_query($conn, $query);
 $data   = mysqli_fetch_assoc($result);
 
+// If table has 0 users, auto-seed default admin and user
+if (!$data) {
+    $count_query = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM users");
+    if ($count_query) {
+        $count_data = mysqli_fetch_assoc($count_query);
+        if (($count_data['cnt'] ?? 0) == 0) {
+            $pass_admin = password_hash('123123', PASSWORD_DEFAULT);
+            $pass_user  = password_hash('890890', PASSWORD_DEFAULT);
+            mysqli_query($conn, "INSERT INTO users (nama, email, password, role) VALUES ('saiful', 'saiful@gmail.com', '$pass_admin', 'admin')");
+            mysqli_query($conn, "INSERT INTO users (nama, email, password, role) VALUES ('wahyuuu', 'wahyu@gmail.com', '$pass_user', 'user')");
+            
+            // Re-fetch user after auto-seeding
+            $result = mysqli_query($conn, $query);
+            $data   = mysqli_fetch_assoc($result);
+        }
+    }
+}
+
 if ($data && (password_verify($password, $data['password']) || $password === $data['password'])) {
-    // Auto re-hash if plain text matched
+    // Auto re-hash if matched plain text
     if ($password === $data['password']) {
         $new_hash = password_hash($password, PASSWORD_DEFAULT);
         $user_id  = $data['id'];
